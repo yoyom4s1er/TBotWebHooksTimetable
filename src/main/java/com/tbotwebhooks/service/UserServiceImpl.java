@@ -21,9 +21,9 @@ public class UserServiceImpl implements UserService{
     public void save(User user) {
         if (user.getBotState() == null) {
             user.setBotState(BotState.START_STATE);
+            log.info("Added new User in database with userID: {}", user.getUserId());
         }
         userRepository.save(user);
-        log.info("Added new User in database with userID: {}", user.getUserId());
     }
 
     public void update(User user) {

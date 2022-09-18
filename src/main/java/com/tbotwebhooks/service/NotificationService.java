@@ -42,7 +42,15 @@ public class NotificationService {
         List<User> users = userService.getAllByNotificationSubscription(true);
         for (User user: users) {
             if (user.getNotificationTime().isBefore(currentDateTime.plusSeconds(30))) {
-                user.setNotificationTime(user.getNotificationTime().plusDays(1));
+
+                LocalDateTime newDateTime = LocalDateTime.of(
+                        currentDateTime.getYear(),
+                        currentDateTime.getMonth(),
+                        currentDateTime.getDayOfMonth(),
+                        user.getNotificationTime().getHour(),
+                        user.getNotificationTime().getMinute());
+
+                user.setNotificationTime(newDateTime.plusDays(1));
                 userService.update(user);
                 DayOfWeek dayOfWeek = ZonedDateTime.now(ZoneId.of("Europe/Moscow")).getDayOfWeek();
                 String message = timeTableProvider.getTimetableByDay(user.getStudentGroup(), dayOfWeek, CurrentWeekState.getCurrentWeek());

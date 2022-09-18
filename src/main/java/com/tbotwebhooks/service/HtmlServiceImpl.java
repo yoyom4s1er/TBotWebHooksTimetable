@@ -48,22 +48,24 @@ public class HtmlServiceImpl implements HtmlService{
     public void saveHtmlFile(String fileName, Document html) throws IOException {
         HtmlFile htmlFile = null;
         Optional<HtmlFile> htmlFileFromDB = htmlRepository.findByFileName(fileName);
+
         if (htmlFileFromDB.isEmpty()) {
             htmlFile = new HtmlFile();
             htmlFile.setFileName(fileName);
             htmlFile.setPath(Paths.get(System.getProperty("user.dir") + HTML_PATH + fileName + ".html").toString());
             htmlFile.setLastUpdateDate(ZonedDateTime.now(ZoneId.of("Europe/Moscow")).getDayOfMonth());
+            htmlFile.setContent(html.outerHtml());
 
             htmlRepository.save(htmlFile);
         } else {
             htmlFile = htmlFileFromDB.get();
             htmlFile.setLastUpdateDate(ZonedDateTime.now(ZoneId.of("Europe/Moscow")).getDayOfMonth());
+            htmlFile.setContent(html.outerHtml());
+
             htmlRepository.save(htmlFile);
         }
 
-        Files.writeString(Paths.get(System.getProperty("user.dir") + HTML_PATH + fileName + ".html"), html.outerHtml());
-
-        log.info("Created html file with path: {}", Paths.get(System.getProperty("user.dir") + HTML_PATH + fileName + ".html"));
+        log.info("Created html file with name: {}", htmlFile.getFileName());
 
     }
 }

@@ -2,27 +2,17 @@ package com.tbotwebhooks.service.parser;
 
 import com.tbotwebhooks.model.HtmlFile;
 import com.tbotwebhooks.service.HtmlService;
-import com.tbotwebhooks.util.HtmlUtils;
-import com.tbotwebhooks.util.PathConverter;
 import com.tbotwebhooks.util.WeekState;
-import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Service
 @Log4j2
@@ -51,6 +41,17 @@ public class TimeTableParser {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        String[] location = url.split("/");
+        String fileName = location[location.length - 1];
+        Optional<HtmlFile> htmlFile = htmlService.getHtmlFile(fileName);
+
+        if (htmlFile.isPresent()) {
+            if (htmlFile.get().getContent() != null) {
+                return Jsoup.parse(htmlFile.get().getContent());
+            }
+        }
+
         return null;
     }
 
@@ -87,9 +88,9 @@ public class TimeTableParser {
 
         Optional<HtmlFile> htmlFile = htmlService.getHtmlFile(fileName);
         if (htmlFile.isPresent()) {
-            if (Files.exists(PathConverter.StringToPath(htmlFile.get().getPath()))) {
+            if (htmlFile.get().getContent() != null) {
                 if (Math.abs(ZonedDateTime.now(ZoneId.of("Europe/Moscow")).getDayOfMonth() - htmlFile.get().getLastUpdateDate()) < 1) {
-                    return Jsoup.parse(HtmlUtils.getHtmlFileAsString(htmlFile.get().getPath()).get());
+                    return Jsoup.parse(htmlFile.get().getContent());
                 }
             }
         }
