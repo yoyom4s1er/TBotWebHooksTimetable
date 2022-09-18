@@ -11,10 +11,14 @@ import java.security.KeyStoreException;
 
 @SpringBootApplication
 @EnableScheduling
-public class TBotWebHooksApplication{
+public class TBotWebHooksApplication extends SpringBootServletInitializer{
 
     public static void main(String[] args) {
         SpringApplication.run(TBotWebHooksApplication.class, args);
     }
 
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        return builder.sources(TBotWebHooksApplication.class);
+    }
 }
