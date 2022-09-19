@@ -24,15 +24,11 @@ public class TimeTableParser {
 
     private final static String prefix = "https://www.miit.ru";
 
-    private final String HTML_PATH;
 
     public TimeTableParser(@Value("${parser.TimetableUrl}") String TimetableUrl,
-                           HtmlService htmlService,
-                           @Value("${html.path}") String path)
-    {
+                           HtmlService htmlService) {
         this.timetableUrl = TimetableUrl;
         this.htmlService = htmlService;
-        this.HTML_PATH = path;
     }
 
     private Document parsePage(String url) {

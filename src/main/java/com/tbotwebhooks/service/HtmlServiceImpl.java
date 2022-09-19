@@ -25,12 +25,8 @@ public class HtmlServiceImpl implements HtmlService{
 
     private final HtmlRepository htmlRepository;
 
-    private final String HTML_PATH;
-
-    public HtmlServiceImpl(HtmlRepository htmlRepository,
-                           @Value("${html.path}")String HTML_PATH) {
+    public HtmlServiceImpl(HtmlRepository htmlRepository) {
         this.htmlRepository = htmlRepository;
-        this.HTML_PATH = HTML_PATH;
     }
 
     @Override
@@ -52,7 +48,6 @@ public class HtmlServiceImpl implements HtmlService{
         if (htmlFileFromDB.isEmpty()) {
             htmlFile = new HtmlFile();
             htmlFile.setFileName(fileName);
-            htmlFile.setPath(Paths.get(System.getProperty("user.dir") + HTML_PATH + fileName + ".html").toString());
             htmlFile.setLastUpdateDate(ZonedDateTime.now(ZoneId.of("Europe/Moscow")).getDayOfMonth());
             htmlFile.setContent(html.outerHtml());
 
