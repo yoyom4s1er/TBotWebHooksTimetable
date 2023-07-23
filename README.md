@@ -14,7 +14,7 @@
 
 **Нажимаю на кнопку "Сегодня"**
 
-![](readmesrcScreenshot_3.png)
+![](readmesrc/Screenshot_3.png)
 
 **Возможность настроить уведомления**
 
